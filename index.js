@@ -93,15 +93,20 @@ module.exports = function(params, opts) {
 			}, function(err) {
 				if (err) {
 					// Creating a function
+					gutil.log('Creating new Lambda function "' + functionName + '"...');
 					createFunction(lambda, toUpload, params, opts, done);
 				} else {
 					// Updating code + config
+					gutil.log('Updating existing Lambda function "' + functionName + '"...');
 					updateFunctionCode(lambda, params.FunctionName, toUpload, params, opts, function(err) {
 						if (err) {
 							return done(err);
 						}
 						if (params.hasOwnProperty('Code')) {
 							delete params['Code'];
+						}
+						if (params.hasOwnProperty('Runtime')) {
+							delete params['Runtime'];
 						}
 						lambda.updateFunctionConfiguration(params, done);
 					});
